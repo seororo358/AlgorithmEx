@@ -10,7 +10,7 @@ def solution(jobs):
     while jobs:
         if not working:
             working = True
-            time += jobs[-1][1] + jobs[-1][0]
+            time = jobs[-1][1] + jobs[-1][0]
             dp.append(jobs[-1][1])
             jobs.pop()
 
