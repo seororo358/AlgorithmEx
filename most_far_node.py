@@ -46,8 +46,6 @@ def solution2(n, edges):
             for j in range(len(matrix[i])):
                 if tb[matrix[i][j]] == -1:
                     st.append(matrix[i][j])
-                elif tb[matrix[i][j]] == -1:
-                    st.append(matrix[i][j])
                 else:
                     pass
         del q[:]
