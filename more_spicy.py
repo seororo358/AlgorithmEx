@@ -14,4 +14,5 @@ def solution(scoville, K):
         second = hq.heappop(q) # 두번째로 작은 값
         hq.heappush(q, first + 2 * second) # 합쳐진 음식의 스코빌지수를 힙에 삽입
         answer += 1
+
     return answer
