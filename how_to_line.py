@@ -5,6 +5,10 @@ def solution(n, k):
     answer = []
     fac = [0] * (n-1)
 
+    if k == factorial(n):
+        arr.reverse()
+        return arr
+
     for i in range(1,n):
         fac[i-1] = factorial(i)
 
@@ -12,6 +16,7 @@ def solution(n, k):
         num = 0
         for i in range(len(fac)-1,0,-1):
             if k == fac[i]:
+                answer.append(arr.pop(0))
                 arr.reverse()
                 answer += arr
                 del arr[:]
@@ -31,4 +36,4 @@ def solution(n, k):
 
     return answer
 
-print(solution(7,300))
+print(solution(18,factorial(7)))
