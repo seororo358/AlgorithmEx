@@ -18,18 +18,14 @@ def solution(n, k):
             if k == fac[i]:
                 answer.append(arr.pop(0))
                 arr.reverse()
-                answer += arr
-                del arr[:]
                 k -= fac[i]
                 break
-
             elif k > fac[i]:
                 num = k // fac[i]
                 k = k % fac[i]
                 del fac[i:]
                 answer.append(arr.pop(num))
                 break
-
             else:
                 answer.append(arr.pop(0))
     answer += arr
@@ -37,4 +33,4 @@ def solution(n, k):
     return answer
 
 
-print(solution(18, factorial(7)))
+print(solution(8, factorial(7)+factorial(6)+factorial(5)))
