@@ -21,16 +21,17 @@ def solution(n, k):
                 k -= fac[i]
                 break
             elif k > fac[i]:
-                num = k // fac[i]
+                answer.append(arr.pop(k // fac[i]))
                 k = k % fac[i]
                 del fac[i:]
-                answer.append(arr.pop(num))
                 break
-            else:
+            elif k < fac[i]:
                 answer.append(arr.pop(0))
+            else:
+                pass
     answer += arr
 
     return answer
 
 
-print(solution(8, factorial(7)+factorial(6)+factorial(5)))
+print(solution(8, 4))
