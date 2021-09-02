@@ -1,29 +1,29 @@
 def solution(gems):
-    answer = []
-    least = []
-    gemset = set(gems)
-    length = len(gemset)
-    last = 0
-    start = 0
+    gemset = len(set(gems))
+    gem_dic = {}
+    last = 1
+    start = 1
 
-    for i in range(len(gems),0,-1):
-        if len(set(gems[:i])) == length:
-            continue
+    for gem in gems:
+        if gem not in gem_dic.keys():
+            gem_dic[gem] = 1
         else:
-            last = i + 1
+            gem_dic[gem] += 1
+        if 0 not in gem_dic.values() and gemset == len(gem_dic.keys()):
             break
-        last = 1
-
-    for i in range(0,len(gems)):
-        temp = len(set(gems[i:last]))
-        if temp == length:
-            continue
         else:
-            start = i
-            break
-        start = 1
+            last += 1
 
-    answer = [start,last]
+    for gem in gems:
+        gem_dic[gem] -= 1
+        if gem_dic[gem] == 0:
+            break
+        else:
+            start += 1
+
+    answer = [start, last]
+
     return answer
+
 
 print(solution(["DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA"]))
