@@ -18,6 +18,7 @@ def solution(board, skill):
         for j in range(col):
             if board[i][j] > 0:
                 answer += 1
+
     return answer
 
 
