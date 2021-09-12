@@ -16,7 +16,7 @@ def solution(n, start, end, roads, traps):
 
     return answer
 
-
+#트랩함수
 def trap_on(graph, trap_num):
     for i in range(len(graph)):
         i += 1
