@@ -16,7 +16,9 @@ def solution(n, start, end, roads, traps):
     return answer
 
 
-##def find(start, graph, end, traps):
+def trap_on(graph, trap_num):
+    for i in range(len(graph)):
 
 
-print(solution(25,[2, 14, 11, 21, 17],2))
+
+print(solution(3,1,3,[[1,2,2],[3,2,3]],[2]))
