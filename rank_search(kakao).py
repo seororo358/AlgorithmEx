@@ -2,11 +2,12 @@ def solution(info, query):
     answer = []
     num = 1
     volunteer = {}
+    #정보 딕셔너리에 저장
     for i in info:
         lang, job, time, food, score = i.split()
         volunteer[num] = ({lang, job, time, food}, int(score))
         num += 1
-
+    #쿼리대로 처리
     for q in query:
         temp = q.split()
         plus = 0
@@ -15,7 +16,7 @@ def solution(info, query):
         q_set -= {'-'}
         for value in volunteer.values():
             if value[0] | q_set == value[0] and score <= value[1]:
-                plus += 1
+                plus += 1 #정보확인시 +1
 
         answer.append(plus)
 
