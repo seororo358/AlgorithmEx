@@ -21,11 +21,9 @@ def solution(n, s, a, b, fares):
                 else:
                     pass
 
+    # a노드와 b노드의 모든 최단거리를 거치면서 최솟값을 계산
+
     return min([mapping[a - 1][i] + mapping[b - 1][i] + mapping[s - 1][i] for i in range(0, n)])
 
-    ##if not_with < with_ma:
-    ##    return not_with
-    ##else:
-    ##    return with_ma###
 
-print(solution(6,4,6,2,[[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
+print(solution(6, 4, 6, 2, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
