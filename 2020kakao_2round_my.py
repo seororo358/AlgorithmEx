@@ -1,125 +1,131 @@
 import json
 import requests
-
-scom = ['not', 'up', 'right', 'down', 'left', 'in', 'out']
-dr = [0, -1, 0, 1, 0, 0, 0]
-dc = [0, 0, 1, 0, -1, 0, 0]
-tcommand = {scom[i]: i for i in range(7)}
+import random
 
 
-class truck:
-    def __init__(self):
-        self.pos = 0
-        self.load = 0
+def renew_grade(user, win, lose, time):
+    score = (40-time) * 99000 * 35 // 100000
+    user[win] = min(user[win] + score, 9999)
+    user[lose] = max(user[lose] - score, 0)
+
+    print("renew")
+
+def define_match(user, wait):
+    pair = []
+    wait.sort(key= lambda x: -x[1])
+    while len(wait) > 1:
+        f = wait.pop()
+        t = wait.pop()
+        pair.append([f[0], t[0]])
+    print("define")
+
+    return pair
+
+def Gameresultapi(url,headers):
+    path = 'game_result'
+    res = []
+    req = requests.get(url+'/'+path, headers = headers)
+    j = req.json()
+    for w, l, time in [(i['win'], i['lose'], i['taken']) for i in j['game_result']]:
+        res.append((w, l, time))
+
+    return res
 
 
-def getloc(url, headers, bycycle):
-    path = 'locations'
+def Waitingapi(url, headers):
+    path = 'waiting_line'
 
+    arr = []
     req = requests.get(url+'/'+path, headers=headers)
     j = req.json()
 
-    for id, cnt in [(i['id'], i['located_bikes_count'])for i in j['locations']]:
-        bycycle[id] = cnt
+    for id, fr in [(i['id'], i['from']) for i in j['waiting_line']]:
+        arr.append((id, fr))
 
-    return bycycle
+    return arr
 
 
-def gettrucks(url, headers, trucks):
-    path = 'trucks'
+def Userinfoapi(url, headers, users):
+    path = 'user_info'
 
     req = requests.get(url+'/'+path, headers=headers)
     j = req.json()
+    for id, grade in [(i['id'], i['grade']) for i in j['user_info']]:
+        users[id] = grade
 
-    for id, loc, load in [(i['id'],i['location_id'],i['loaded_bikes_count'])for i in j['trucks']]:
-        trucks[id].pos = loc
-        trucks[id].load = load
-
-    return trucks
+    return users
 
 
-def simulate(url, headers, command):
-    path = 'simulate'
+#data = {'pairs':[[],,,,,]}
 
-    req = requests.put(url+'/'+path, headers=headers, data=command)
+def Matchapi(url, headers, data):
+    path = 'match'
 
-    return req.json()
+    req = requests.put(url + '/' + path, headers=headers, data=data)
+    j = req.json()
 
-
-def truckmove(trucks, bicycles, mean, des, command):
-    recom = []
-
-    return recom
+    return j
 
 
-def getdist(loc, f, t):
-    num = abs(loc[f][0] - loc[t][0]) + abs(loc[f][1] - loc[t][1])
+#data = [{'id': 1, 'grade': 1900},,,,,,]
 
-    return num
+def Changegradeapi(url, headers, data):
+    path = 'change_grade'
 
+    req = requests.put(url + '/' + path, headers=headers, data=data)
+    j = req.json()
 
-def truckpath(loc, f, t):
-    dcom = [tcommand['up'] for i in range(abs(loc[f][0] - loc[t][0])) if loc[f][0] > loc[t][0]]
-    dcom.extend([tcommand['down'] for i in range(abs(loc[f][0] - loc[t][0])) if loc[f][0] < loc[t][0]])
-    dcom.extend([tcommand['right'] for i in range(abs(loc[f][1] - loc[t][1])) if loc[f][1] < loc[t][1]])
-    dcom.extend([tcommand['left'] for i in range(abs(loc[f][1] - loc[t][1])) if loc[f][1] > loc[t][1]])
-    return dcom
+    return j
 
 
 def main(qid):
-    URL = 'https://kox947ka1a.execute-api.ap-northeast-2.amazonaws.com/prod/users'
-    token = '40183910509330daf1b31650b8aff7bb'
+    url = 'https://huqeyhi95c.execute-api.ap-northeast-2.amazonaws.com/prod'
+    token = '90c097a3819eef80cdfd5c594b3c0fc1'
     path = 'start'
     headers = {'X-Auth-Token': token, 'Content-Type': 'application/json'}
     param = {'problem': qid}
 
-    req = requests.post(URL+'/'+path, headers=headers, data=json.dumps(param))
+    if qid == 1:
+        count = 30
+        mean = 1
+    else:
+        count = 900
+        mean = 45
+        abuser = set()
+
+    user = [int(random.uniform(0, 9999)) for _ in range(count+1)]
+    #playing = [0 for _ in range(count+1)]
+
+
+    req = requests.post(url + '/' + path, headers=headers, data=json.dumps(param))
     js = req.json()
     auth_key = js['auth_key']
-    headers = {'Authorization': auth_key, 'Content-type': 'applications/json'}
-
-    if qid == 1:
-        msize = 5
-        mean = 2
-        truck_num = 5
-        bnum = 4
-    else:
-        msize = 60
-        mean = 3
-        truck_num = 10
-        bnum = 3
-
-    by_map = [[msize-i-1 + msize*j] for j in range(msize) for i in range(msize)]
-    pos = {by_map[i][j]: (i, j) for i in range(msize) for j in range(msize)}
-
-    bycycles = [0 for _ in range(msize*msize)]
-    trucks = [truck() for _ in range(truck_num)]
-
-    truck_des = [0 for _ in range(len(trucks))]
-
-    for time in range(720):
-        bycycles = getloc(URL, headers=headers, bycycle=bycycles)
-        emergen = [i[0] for i in enumerate(bycycles) if i[1] == 0 or i[1] > bnum]
-
-        for e in emergen:
-            minn = 10000
-            for j in range(len(trucks)):
-                if getdist(pos, trucks[j].pos, e) < minn:
-                    truck_des[j] = e
-
-        nextcom = []
-
-        for i in range(truck_num):
-            t = trucks[i]
-            ncom = truckmove(t,bycycles,mean,truck_des[i])
-            nextcom.append({'truck_id': i, 'command': ncom})
-
-        j = simulate(URL, headers=headers, command=json.dumps({'commands': nextcom}))
-        print(j['time'], j['failed_requests_count'])
+    headers = {'Authorization': auth_key, 'Content-Type': 'application/json'}
 
 
-    req = requests.get(URL+'/score', headers=headers)
+    for i in range(596):
+        user = Userinfoapi(url, headers=headers, users=user)
+
+        wait_q = []
+        wait_q = Waitingapi(url, headers=headers)
+
+        pair = define_match(user, wait_q)
+        js = Matchapi(url, headers=headers, data=json.dumps({'pairs': pair}))
+        print(js['time'])
+        res = Gameresultapi(url, headers=headers)
+        commands = []
+        while res and len(commands) <= 10:
+            w, l, t = res.pop()
+            renew_grade(user, w, l, t)
+            commands.append({'id': w, 'grade': user[w]})
+            commands.append({'id': l, 'grade': user[l]})
+
+        js = Changegradeapi(url, headers=headers, data=json.dumps({'commands': commands}))
+        print(js['status'])
+
+
+    req = requests.get(url+'/score', headers=headers)
     print(req.json()['score'])
 
-
-main(1)
+#main(1)
+main(2)
