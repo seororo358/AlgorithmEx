@@ -77,6 +77,8 @@ def Changegradeapi(url, headers, data):
 
     return j
 
+def find_abuser(abuser, user):
+    return
 
 def main(qid):
     url = 'https://huqeyhi95c.execute-api.ap-northeast-2.amazonaws.com/prod'
