@@ -1,5 +1,5 @@
 from itertools import product
-
+import bisect
 
 def solution(info, query):
     answer = []
@@ -17,16 +17,15 @@ def solution(info, query):
         for prod in tuple(product(*pd)):
             volunteer[prod].append(int(score))
 
+    for v in volunteer.keys():
+        volunteer[v].sort()
     #쿼리대로 처리
 
     for q in query:
         temp = q.split()
-        plus = 0
         lang, job, time, food, score = temp[0], temp[2], temp[4], temp[6], int(temp[7])
         q_set = (lang, job, time, food)
-        for value in volunteer[q_set]:
-            if value >= score:
-                plus += 1 #정보확인시 +1
+        plus = len(volunteer[q_set]) - bisect.bisect_left(volunteer[q_set], score)
 
         answer.append(plus)
 
