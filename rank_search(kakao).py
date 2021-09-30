@@ -1,21 +1,31 @@
+from itertools import product
+
+
 def solution(info, query):
     answer = []
     num = 1
-    volunteer = {}
-    #정보 딕셔너리에 저장
+    volunteer = dict()
+    combi = [["java", "python", "cpp", "-"], ["backend", "frontend", "-"], ["junior", "senior", "-"],
+             ["chicken", "pizza", "-"]]
+
+    for item in tuple(product(*combi)):
+        volunteer[item] = []
+
     for i in info:
         lang, job, time, food, score = i.split()
-        volunteer[num] = ({lang, job, time, food}, int(score))
-        num += 1
+        pd = [[lang, "-"], [job, "-"], [time, "-"], [food, "-"]]
+        for prod in tuple(product(*pd)):
+            volunteer[prod].append(int(score))
+
     #쿼리대로 처리
+
     for q in query:
         temp = q.split()
         plus = 0
         lang, job, time, food, score = temp[0], temp[2], temp[4], temp[6], int(temp[7])
-        q_set = {lang,job,time,food}
-        q_set -= {'-'}
-        for value in volunteer.values():
-            if value[0] | q_set == value[0] and score <= value[1]:
+        q_set = (lang, job, time, food)
+        for value in volunteer[q_set]:
+            if value >= score:
                 plus += 1 #정보확인시 +1
 
         answer.append(plus)
