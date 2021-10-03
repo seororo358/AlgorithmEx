@@ -7,7 +7,7 @@ class Node(object):
         self.data = data
         self.child = list()
 
-
+# 1번째 쿼리: 노드를 루트로 갖는 서브트리데이터 총합
 def sum_from_node(nodes, num):
     ans = nodes[num].data
     if len(nodes[num].child) == 0:
@@ -21,7 +21,7 @@ def sum_from_node(nodes, num):
 
     return ans
 
-
+# 2번째 쿼리: 순차적으로 부모노드값 복사
 def sec_query(parent, nodes, num, w):
     if nodes[num].key == 1:
         nodes[num].data = w
