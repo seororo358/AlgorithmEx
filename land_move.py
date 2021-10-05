@@ -29,12 +29,12 @@ def solution(land, height):
                 queue = dq([(i, j)])
                 sector[i][j] = num
                 while queue:
-                    i, j = queue.popleft()
+                    c_x, c_y = queue.popleft()
                     for x, y in (1, 0), (0, 1), (-1, 0), (0, -1):
-                        new_x, new_y = x + i, y + j
+                        new_x, new_y = x + c_x, y + c_y
                         if new_x < 0 or new_y < 0 or new_x >= n or new_y >= m:
                             continue
-                        if not sector[new_x][new_y] and abs(land[i][j] - land[new_x][new_y]) <= height:
+                        if not sector[new_x][new_y] and abs(land[c_x][c_y] - land[new_x][new_y]) <= height:
                             sector[new_x][new_y] = num
                             queue.append((new_x, new_y))
                 num += 1
