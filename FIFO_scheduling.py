@@ -31,4 +31,4 @@ def solution(n, cores):
     return answer
 
 
-print(solution(7, [1, 2, 3]))
+print(solution(8, [1, 2, 3]))
