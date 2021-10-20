@@ -34,7 +34,7 @@ for i in range(m):
 answer = []
 for i in range(m):
     for j in range(n):
-        for x, y in (1,0),(0,1):
+        for x, y in (1, 0), (0, 1):
             if x+i >= m or y+j >= n:
                 continue
             if graph[i][j] != graph[i+x][j+y]:
