@@ -46,7 +46,7 @@ def gettrucks(url, headers, trucks):
 
 def simulate(url, header, data):
     path = 'simulate'
-    req = requests.put('/'.join([url,path]), headers = header, data = data)
+    req = requests.put('/'.join([url, path]), headers=header, data=data)
 
     return req.json()
 
@@ -105,7 +105,7 @@ def truckmove(t, bnum, map, mmap, mean, comm, dest, all='not'):
 def kakaotaxi(qid=1):
     url = 'https://kox947ka1a.execute-api.ap-northeast-2.amazonaws.com/prod/users'
     path = 'start'
-    token = '7679223a042273b53de82f042bb735f4'
+    token = '40183910509330daf1b31650b8aff7bb'
     param = {'problem': qid}
     headers = {'X-Auth-Token': token, 'Content_Type': 'application/json'}
 
@@ -115,9 +115,11 @@ def kakaotaxi(qid=1):
     if qid == 1:
         msize = 5
         mean = 2
+        emer = 4
     else:
         msize = 60
         mean = 3
+        emer = 6
 
     mymap = [[msize-i-1 + msize*j for j in range(msize)] for i in range(msize)]
 
@@ -150,7 +152,7 @@ def kakaotaxi(qid=1):
                 mmax, maxi = j, i
 
         trucks = gettrucks(url, headers, trucks)
-        emergen = [i[0] for i in enumerate(bycycles) if i[1] == 0]
+        emergen = [i[0] for i in enumerate(bycycles) if i[1] == 0 or i[1] > emer]
 
         i = 0
 
@@ -175,10 +177,11 @@ def kakaotaxi(qid=1):
             nextcommand.append({'truck_id': i, 'command': ncom})
 
         j = simulate(url, header=headers, data=json.dumps({'commands': nextcommand}))
-        print(j['time'])
+        print(j['time'], j['failed_requests_count'])
         prev_bycycle = [i for i in bycycles]
     req = requests.get(url + '/score', headers=headers)
-    print(req.json()['score'])
+    print(str(req.json()['score']))
 
 
 kakaotaxi(1)
+#kakaotaxi(2)
