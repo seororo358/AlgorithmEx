@@ -1,22 +1,14 @@
 import sys
+input = sys.stdin.readline
+def update(idx, dif):
+    while(idx <= n):
+        tree[idx] += dif
+        idx += (idx & -idx)
 
-n, k = map(int, sys.stdin.readline().split())
-arr = [True] * (n+1)
-start = 2
-answer = 0
-while start <= n:
-    if not arr[start]:
-        start += 1
-        continue
-    for i in range(start, n+1):
-        if i % start or not arr[i]:
-            continue
-        else:
-            k -= 1
-            arr[i] = False
-            if k == 0:
-                answer = i
-                break
-    if answer > 0:
-        break
-print(answer)
+
+n, m, k = map(int, input().split())
+tree = [0] * n
+for i in range(n):
+    tree[i] = int(input())
+for _ in range(m+k):
+    a, b, c = map(int, input().split())
